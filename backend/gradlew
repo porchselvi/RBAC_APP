@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+set -eu
+
+VERSION=8.10.2
+DIST="gradle-$VERSION"
+CACHE_ROOT="${GRADLE_USER_HOME:-$HOME/.gradle}/wrapper/dists/rbac-$DIST"
+GRADLE="$CACHE_ROOT/$DIST/bin/gradle"
+
+if [ ! -x "$GRADLE" ]; then
+  mkdir -p "$CACHE_ROOT"
+  ARCHIVE="$CACHE_ROOT/$DIST-bin.zip"
+  URL="https://services.gradle.org/distributions/$DIST-bin.zip"
+  echo "Downloading Gradle $VERSION..."
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "$URL" -o "$ARCHIVE"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -q "$URL" -O "$ARCHIVE"
+  else
+    echo "curl or wget is required to download Gradle." >&2
+    exit 1
+  fi
+  unzip -q -o "$ARCHIVE" -d "$CACHE_ROOT"
+  rm -f "$ARCHIVE"
+fi
+
+exec "$GRADLE" "$@"

@@ -4,21 +4,32 @@ React/Vite frontend with a Java 17 Spring Boot REST API. The backend uses Gradle
 
 ## Run locally
 
-### Backend
+### Backend (Windows PowerShell)
 
-```bash
+```powershell
 cd backend
-gradle bootRun
+.\gradlew.bat bootRun
 ```
+
+The first run downloads the pinned Gradle 8.10.2 distribution into your Gradle user cache; no system Gradle installation is required. Java 17 or newer must be installed and available on `PATH`.
+
+### Backend (macOS/Linux)
+
+```sh
+cd backend
+./gradlew bootRun
+```
+
+### Backend configuration
 
 The API listens on `http://localhost:8080`. On first startup it creates an admin account and the default roles. Local-only default credentials are `admin@company.com` / `ChangeMe123!`. Override `ADMIN_EMAIL` and `ADMIN_PASSWORD` before starting the service; change them before using this outside local development.
 
 Set a strong signing secret (at least 32 bytes) and optionally configure the port, database URL, and frontend origin:
 
-```bash
+```sh
 JWT_SECRET='use-a-long-random-secret-at-least-32-bytes' \
 ADMIN_EMAIL='admin@example.com' ADMIN_PASSWORD='change-this-password' \
-FRONTEND_ORIGIN='http://localhost:5173' gradle bootRun
+FRONTEND_ORIGIN='http://localhost:5173' ./gradlew bootRun
 ```
 
 The H2 database is stored under `backend/data/` and keeps users/roles between restarts. Configure `DATABASE_URL`, `DATABASE_USERNAME`, and `DATABASE_PASSWORD` to use another database; the current datasource driver is H2, so change the driver/dependency for other database engines.
